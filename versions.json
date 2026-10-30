@@ -1,0 +1,29 @@
+{
+  "engines": {
+    "4.7.2.stable": {
+      "wasm_size": 39514754
+    }
+  },
+  "builds": [
+    {
+      "key": "v1",
+      "title": "First muster",
+      "pr": null,
+      "pr_url": null,
+      "date": "2026-10-30",
+      "commit": "c51b06b",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 81072,
+      "summary": "The first playable night: twenty militiamen hold four lines against the dead from sunset to dawn, firing in volleys and falling back west toward the village.",
+      "changes": [
+        "Four destructible north\u2013south lines: split-rail fence, log breastwork, stake stockade and the village palisade",
+        "Twenty AI militiamen who make ready, present and fire in volleys, then reload",
+        "First-person musket with aim-down-sights and headshots; fire with the line for +50% damage",
+        "Hold E to repair or rebuild broken barricade sections; T orders the line to fall back",
+        "Seven waves of walkers, runners and brutes across a sunset-to-dawn night",
+        "If you fall, you take up the musket of the nearest man still standing"
+      ]
+    }
+  ]
+}

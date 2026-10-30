@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Last Stand at Fort Hollow</title>
+<meta name="description" content="Hold the frontier from sunset to dawn. A playable build history of Last Stand at Fort Hollow, one build per merged pull request.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+/* Layout: a 1757 frontier broadside nailed up at dusk. Parchment type over night ink;
+   the signature detail is the field map of the four lines, drawn from the game's real numbers. */
+:root {
+  --ink: #0d1014;          /* night */
+  --ink-2: #161b21;        /* raised panel */
+  --parch: #eadfc4;        /* parchment text */
+  --faded: #a39a85;        /* captions */
+  --ember: #e9913b;        /* musket flash / torchlight: the one accent */
+  --blood: #a3372a;        /* the dead, danger */
+  --moon: #9fb3c8;         /* moonlight */
+  --rule: #2b323a;
+  --display: "IM Fell English SC", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --body: "IM Fell English", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --mono: "Courier Prime", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+[hidden] { display: none !important; }
+body {
+  background: var(--ink);
+  color: var(--parch);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+#canvas {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  display: block; background: #000; outline: none;
+}
+#canvas:focus-visible { outline: 2px solid var(--ember); outline-offset: -2px; }
+
+.cover {
+  position: fixed; inset: 0;
+  overflow-y: auto;
+  background:
+    radial-gradient(90% 55% at 50% -12%, rgba(233,145,59,.20), transparent 62%),
+    radial-gradient(70% 40% at 85% 112%, rgba(159,179,200,.10), transparent 70%),
+    var(--ink);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 44px 64px;
+  display: grid; justify-items: center;
+  transition: opacity .5s ease;
+}
+.cover.fading { opacity: 0; pointer-events: none; }
+.sheet { width: 100%; max-width: 860px; display: grid; gap: 30px; }
+
+.masthead { display: grid; gap: 14px; text-align: center; justify-items: center; }
+.eyebrow {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--faded); display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+}
+.eyebrow span + span::before { content: "✦"; margin-right: 14px; color: var(--ember); font-size: 9px; vertical-align: 2px; }
+.hear { font-family: var(--display); font-size: clamp(18px, 3vw, 24px); letter-spacing: .3em; color: var(--ember); margin: 0; }
+h1 {
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(54px, 11vw, 120px);
+  line-height: .86; letter-spacing: .01em;
+  margin: 0; text-wrap: balance;
+}
+h1 small { display: block; font-size: .38em; letter-spacing: .32em; color: var(--faded); margin-bottom: .25em; }
+.rule-orn { width: min(420px, 80%); height: 12px; display: block; color: var(--ember); }
+.lede { margin: 0; max-width: 56ch; font-size: 19px; font-style: italic; text-wrap: pretty; }
+
+/* Field map: the four lines at their true x positions (55, 25, -5, -35), village west, woods east. */
+.field { display: grid; gap: 10px; }
+.map {
+  position: relative; height: 150px;
+  border: 1px solid var(--rule);
+  background:
+    linear-gradient(90deg, rgba(122,84,48,.30) 0 16.5%, transparent 16.5%),
+    linear-gradient(180deg, rgba(159,179,200,.05), transparent 40%, rgba(0,0,0,.25)),
+    repeating-linear-gradient(90deg, transparent 0 22px, rgba(234,223,196,.025) 22px 23px),
+    var(--ink-2);
+  overflow: hidden;
+}
+.map::before, .map::after {           /* forest edges along north and south */
+  content: ""; position: absolute; left: 0; right: 0; height: 12px;
+  background: repeating-linear-gradient(90deg, #1b2a20 0 9px, #142019 9px 15px);
+}
+.map::before { top: 0; } .map::after { bottom: 0; }
+.woods {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 7%;
+  background: repeating-linear-gradient(0deg, #1b2a20 0 9px, #142019 9px 15px);
+}
+.village {
+  position: absolute; left: 5%; top: 50%; transform: translateY(-50%);
+  display: grid; gap: 7px; justify-items: center;
+}
+.village i { display: block; width: 14px; height: 11px; background: #5b4532; position: relative; box-shadow: 0 0 10px rgba(233,145,59,.45); }
+.village i::before { content: ""; position: absolute; left: -2px; right: -2px; top: -7px; border: 9px solid transparent; border-bottom: 7px solid #2a211c; border-top: 0; }
+.line {
+  position: absolute; top: 12px; bottom: 12px; width: 4px; margin-left: -2px;
+  background: repeating-linear-gradient(180deg, var(--c, #8a6a45) 0 9px, transparent 9px 12px);
+}
+.line b {
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  font: 400 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap;
+  color: var(--faded); background: var(--ink-2); padding: 2px 4px; display: none;
+}
+.company {
+  position: absolute; top: 22%; bottom: 22%; width: 5px; margin-left: -9px;
+  background: repeating-linear-gradient(180deg, var(--moon) 0 4px, transparent 4px 9px);
+  left: 79.1%;
+  animation: fallback 16s steps(1, end) infinite;
+}
+@keyframes fallback { 0% { left: 79.1%; } 40% { left: 61.4%; } 70% { left: 43.6%; } 88% { left: 25.9%; } }
+.dead { position: absolute; inset: 0; pointer-events: none; }
+.dead i {
+  position: absolute; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--blood); box-shadow: 0 0 6px rgba(163,55,42,.9);
+  animation: shamble linear infinite;
+}
+@keyframes shamble { from { left: 96%; } to { left: 18%; } }
+.flash {
+  position: absolute; top: 22%; bottom: 22%; width: 26px; margin-left: -6px;
+  background: radial-gradient(closest-side, rgba(233,145,59,.85), transparent);
+  opacity: 0; animation: volley 2.6s ease-out infinite, fallback 16s steps(1, end) infinite;
+  left: 79.1%;
+}
+@keyframes volley { 0%, 78% { opacity: 0; } 80% { opacity: 1; } 100% { opacity: 0; } }
+.compass {
+  display: flex; justify-content: space-between;
+  font: 400 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--faded);
+}
+.legend {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+  border: 1px solid var(--rule); border-top: 0;
+}
+.legend > div { padding: 10px 12px; border-left: 1px solid var(--rule); min-width: 0; }
+.legend > div:first-child { border-left: 0; }
+.legend .n { font: 700 11px/1 var(--mono); color: var(--ember); letter-spacing: .1em; }
+.legend .t { font-family: var(--display); font-size: 17px; line-height: 1.15; margin: 5px 0 6px; }
+.hp { height: 4px; background: var(--rule); }
+.hp i { display: block; height: 100%; background: var(--parch); }
+.legend .s { font: 400 12px/1.2 var(--mono); color: var(--faded); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.caption { margin: 0; color: var(--faded); font-size: 15px; max-width: 66ch; }
+
+/* The night clock: sunset to dawn with the seven waves at their real times. */
+.clock { display: grid; gap: 8px; }
+.sky {
+  position: relative; height: 26px;
+  background: linear-gradient(90deg, #d9864a 0%, #7a3a46 6%, #1d2340 13%, #0b1020 50%, #1d2340 86%, #b8676a 94%, #f0c27a 100%);
+  border: 1px solid var(--rule);
+}
+.sky i {
+  position: absolute; top: -5px; bottom: -5px; width: 2px; margin-left: -1px; background: var(--blood);
+}
+.sky i::after {
+  content: attr(data-w); position: absolute; top: 100%; left: 50%; transform: translate(-50%, 6px);
+  font: 700 11px/1 var(--mono); color: var(--blood);
+}
+.sky i.big { width: 3px; }
+.hours { display: flex; justify-content: space-between; font: 400 12px/1 var(--mono); color: var(--faded); margin-top: 14px; font-variant-numeric: tabular-nums; }
+
+/* Build picker */
+.build { display: grid; gap: 12px; border-top: 1px solid var(--rule); padding-top: 24px; }
+.head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+h2 {
+  font-family: var(--display); font-weight: 400;
+  font-size: 26px; letter-spacing: .06em;
+  margin: 0; color: var(--ember);
+}
+.count { font-family: var(--mono); font-size: 12px; color: var(--faded); font-variant-numeric: tabular-nums; }
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: ""; position: absolute; right: 16px; top: 50%;
+  width: 8px; height: 8px; margin-top: -6px;
+  border-right: 2px solid var(--ember); border-bottom: 2px solid var(--ember);
+  transform: rotate(45deg); pointer-events: none;
+}
+#buildSelect {
+  appearance: none; -webkit-appearance: none;
+  width: 100%; font-family: var(--body); font-size: 18px;
+  color: var(--parch); background: var(--ink-2);
+  border: 1px solid var(--rule); border-radius: 0;
+  padding: 11px 44px 11px 14px; cursor: pointer; text-overflow: ellipsis;
+}
+#buildSelect:hover { border-color: var(--faded); }
+#buildSelect:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+#buildSelect option { background: var(--ink-2); color: var(--parch); }
+.card { display: grid; gap: 8px; min-width: 0; }
+.meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px;
+  font-family: var(--mono); font-size: 12px; color: var(--faded); font-variant-numeric: tabular-nums;
+}
+.meta a { color: var(--ember); text-decoration: none; border-bottom: 1px solid currentColor; }
+.meta a:hover { color: var(--parch); }
+.meta a:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+.key { font-family: var(--mono); font-weight: 700; font-size: 12px; color: var(--ink); background: var(--parch); padding: 1px 7px; }
+.pill { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; padding: 1px 7px; border: 1px solid currentColor; }
+.pill.merged { color: var(--moon); }
+.pill.open { color: var(--ember); }
+.summary { margin: 0; max-width: 66ch; }
+
+.cta { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.start {
+  appearance: none; border: 0; cursor: pointer;
+  background: var(--ember); color: var(--ink);
+  font-family: var(--display); font-size: 30px; letter-spacing: .08em;
+  padding: 10px 30px 8px;
+  clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%);
+  transition: transform .15s ease, filter .15s ease;
+}
+.start:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.start:focus-visible { outline: 2px solid var(--parch); outline-offset: 4px; }
+.start[disabled] { cursor: progress; filter: saturate(.6) brightness(.8); transform: none; }
+.status { font-family: var(--mono); font-size: 12px; color: var(--faded); min-width: 0; }
+.progress { width: 100%; height: 3px; background: var(--rule); overflow: hidden; }
+.progress i { display: block; height: 100%; width: 0; background: var(--ember); transition: width .2s linear; }
+.error { border: 1px solid var(--blood); background: rgba(163,55,42,.14); padding: 12px 14px; font-size: 15px; }
+
+.grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; }
+.grid > * { min-width: 0; }
+.grid h2 { margin-bottom: 10px; }
+.controls { width: 100%; border-collapse: collapse; font-size: 15px; }
+.controls td { padding: 5px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.controls td:first-child { color: var(--faded); padding-right: 12px; white-space: nowrap; }
+kbd {
+  font-family: var(--mono); font-size: 12px;
+  display: inline-block; min-width: 22px; text-align: center;
+  padding: 1px 6px; margin: 0 2px 2px 0;
+  border: 1px solid var(--rule); border-bottom-width: 2px;
+  background: var(--ink-2); color: var(--parch);
+}
+.orders { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; font-size: 15px; }
+.orders li { padding-left: 18px; position: relative; }
+.orders li::before { content: "✦"; position: absolute; left: 0; top: .1em; font-size: 10px; color: var(--ember); }
+
+/* Changelog: every version and what changed in it. */
+.log { display: grid; gap: 0; border-top: 1px solid var(--rule); padding-top: 24px; }
+.log h2 { margin-bottom: 4px; }
+.log > p { margin: 0 0 14px; color: var(--faded); font-size: 15px; }
+.entry { display: grid; grid-template-columns: 92px 1fr; gap: 6px 18px; padding: 16px 0; border-top: 1px dashed var(--rule); }
+.entry .ver { font-family: var(--mono); font-weight: 700; font-size: 30px; line-height: 1; color: var(--parch); }
+.entry .ver small { display: block; font: 400 11px/1.4 var(--mono); color: var(--faded); margin-top: 6px; letter-spacing: .04em; }
+.entry h3 { font-family: var(--display); font-weight: 400; font-size: 21px; margin: 0; }
+.entry ul { margin: 6px 0 0; padding-left: 18px; font-size: 15px; }
+.entry li { margin: 3px 0; }
+.entry li::marker { color: var(--ember); }
+.entry .play {
+  appearance: none; background: none; cursor: pointer; padding: 0;
+  font: 700 12px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ember); border: 0; border-bottom: 1px solid currentColor; margin-top: 10px;
+}
+.entry .play:hover { color: var(--parch); }
+.entry .play:focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
+.entry.current .ver { color: var(--ember); }
+
+.fine { font-size: 14px; color: var(--faded); margin: 0; text-align: center; font-style: italic; }
+
+.hud-btns {
+  position: fixed; z-index: 5;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  right: max(10px, env(safe-area-inset-right, 0px));
+  display: flex; gap: 8px;
+}
+.hud-btns button {
+  appearance: none; cursor: pointer;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  background: rgba(13,16,20,.72); color: var(--parch);
+  border: 1px solid var(--rule); padding: 6px 10px;
+}
+.hud-btns button:hover { border-color: var(--ember); color: var(--ember); }
+.hud-btns button:focus-visible { outline: 2px solid var(--ember); }
+
+@media (min-width: 700px) { .line b { display: block; } }
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .grid { grid-template-columns: 1fr; }
+  .legend { grid-template-columns: 1fr 1fr; }
+  .legend > div:nth-child(3) { border-left: 0; }
+  .legend > div:nth-child(n+3) { border-top: 1px solid var(--rule); }
+  .entry { grid-template-columns: 1fr; }
+  .start { font-size: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .company, .flash, .dead i { animation: none; }
+  .cover, .start, .progress i { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="canvas" tabindex="0" hidden>Your browser does not support the canvas element.</canvas>
+
+<div class="hud-btns" id="hudBtns" hidden>
+  <button type="button" id="switchBtn">Change version</button>
+  <button type="button" id="fsBtn">Fullscreen</button>
+</div>
+
+<main class="cover" id="cover">
+  <div class="sheet">
+    <header class="masthead">
+      <div class="eyebrow"><span>Playable build history</span><span>Pennsylvania frontier</span><span>Anno 1757</span></div>
+      <p class="hear">Hear ye, hear ye</p>
+      <h1><small>The</small>Last Stand<br>at Fort Hollow</h1>
+      <svg class="rule-orn" viewBox="0 0 420 12" aria-hidden="true"><path d="M0 6h180M240 6h180" stroke="currentColor" stroke-width="1"/><path d="M210 0l6 6-6 6-6-6z" fill="currentColor"/><circle cx="192" cy="6" r="2" fill="currentColor"/><circle cx="228" cy="6" r="2" fill="currentColor"/></svg>
+      <p class="lede">At sunset the dead walk out of the eastern woods. Twenty men of the Hollow militia must hold them off until dawn: firing in volleys, mending the barricades, and falling back toward the village when a line can no longer hold.</p>
+    </header>
+
+    <section class="field" aria-labelledby="mapHeading">
+      <h2 id="mapHeading">The field, from the village to the woods</h2>
+      <div class="compass" aria-hidden="true"><span>◄ West · the village</span><span>East · the burying ground ►</span></div>
+      <div class="map" role="img" aria-label="Map of the valley: the village in the west, four north–south defensive lines, and the dead advancing from the eastern woods while the militia falls back line by line.">
+        <div class="village" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="line" style="left:26.8%;--c:#a07a4a"><b>Palisade</b></div>
+        <div class="line" style="left:44.5%;--c:#8f6d45"><b>Stockade</b></div>
+        <div class="line" style="left:62.3%;--c:#7e6040"><b>Breastwork</b></div>
+        <div class="line" style="left:80.0%;--c:#6e553a"><b>Fence</b></div>
+        <div class="dead" id="dead" aria-hidden="true"></div>
+        <div class="company" aria-hidden="true"></div>
+        <div class="flash" aria-hidden="true"></div>
+        <div class="woods" aria-hidden="true"></div>
+      </div>
+      <div class="legend">
+        <div><div class="n">Line I</div><div class="t">Split-Rail Fence</div><div class="hp"><i style="width:34.6%"></i></div><div class="s">180 per section</div></div>
+        <div><div class="n">Line II</div><div class="t">Log Breastwork</div><div class="hp"><i style="width:50%"></i></div><div class="s">260 per section</div></div>
+        <div><div class="n">Line III</div><div class="t">Stake Stockade</div><div class="hp"><i style="width:69.2%"></i></div><div class="s">360 per section</div></div>
+        <div><div class="n">Line IV</div><div class="t">Village Palisade</div><div class="hp"><i style="width:100%"></i></div><div class="s">520 per section · the last hold</div></div>
+      </div>
+      <p class="caption">Each line is twelve 4-metre sections. The dead batter a section until it gives way, then the whole horde pours through the gap. You decide when the company falls back. Leave too soon and you give up ground; leave too late and the men are overrun.</p>
+    </section>
+
+    <section class="clock" aria-labelledby="clockHeading">
+      <h2 id="clockHeading">One night, seven waves</h2>
+      <div class="sky" role="img" aria-label="The night from 6:45 in the evening to 5:45 in the morning, with seven waves of the dead.">
+        <i style="left:5%" data-w="I"></i><i style="left:15.8%" data-w="II"></i><i style="left:27.5%" data-w="III"></i>
+        <i style="left:40%" data-w="IV"></i><i class="big" style="left:53.3%" data-w="V"></i>
+        <i class="big" style="left:66.7%" data-w="VI"></i><i class="big" style="left:80%" data-w="VII"></i>
+      </div>
+      <div class="hours" aria-hidden="true"><span>18:45 sunset</span><span>midnight</span><span>05:45 dawn</span></div>
+      <p class="caption">Walkers come first, then runners, then great hulking brutes that tear through a fence in seconds. Last until the sun rises behind the eastern woods and the dead burn in its light.</p>
+    </section>
+
+    <section class="build" aria-labelledby="buildHeading">
+      <div class="head">
+        <h2 id="buildHeading">Choose your version</h2>
+        <span class="count" id="buildCount">Loading the muster roll</span>
+      </div>
+      <div class="select-wrap">
+        <select id="buildSelect" aria-label="Version to play" disabled>
+          <option>Loading versions…</option>
+        </select>
+      </div>
+      <div class="card" id="buildCard" aria-live="polite"></div>
+    </section>
+
+    <div class="cta">
+      <button class="start" id="startBtn" type="button">Take your place in the line</button>
+      <div class="status" id="status" aria-live="polite">About 10 MB the first time. Needs a keyboard and mouse.</div>
+    </div>
+    <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+    <div class="error" id="error" role="alert" hidden></div>
+
+    <div class="grid">
+      <section>
+        <h2>Drill</h2>
+        <table class="controls">
+          <tr><td>March</td><td><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>, <kbd>Shift</kbd> to run, <kbd>Space</kbd> to jump</td></tr>
+          <tr><td>Fire / aim</td><td><kbd>LMB</kbd> / <kbd>RMB</kbd></td></tr>
+          <tr><td>Reload</td><td><kbd>R</kbd>, about four seconds</td></tr>
+          <tr><td>Repair</td><td>Hold <kbd>E</kbd> at a damaged barricade</td></tr>
+          <tr><td>Order a volley</td><td><kbd>V</kbd></td></tr>
+          <tr><td>Hold fire</td><td><kbd>H</kbd> toggles auto-volleys</td></tr>
+          <tr><td>Fall back</td><td><kbd>T</kbd> sends the line west</td></tr>
+          <tr><td>Pause</td><td><kbd>Esc</kbd></td></tr>
+        </table>
+      </section>
+      <section>
+        <h2>Standing orders</h2>
+        <ul class="orders">
+          <li>Fire when the sergeant calls <em>Present!</em> or <em>Fire!</em> and your shot hits half again as hard.</li>
+          <li>Aim for the head. A ball to the skull drops a walker outright.</li>
+          <li>A broken section can be rebuilt. Hold <kbd>E</kbd> until it stands again.</li>
+          <li>If you fall, you take up the musket of the nearest man still standing.</li>
+          <li>Lose if ten of the dead reach the houses, or when the last man falls.</li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="log" aria-labelledby="logHeading">
+      <h2 id="logHeading">Dispatches from the front</h2>
+      <p>Every version of the game, newest first. Each one is the game exactly as it stood when that pull request merged.</p>
+      <div id="log"></div>
+    </section>
+
+    <p class="fine">Builds marked “PR open” are previews from an unmerged branch. Drill and orders describe the newest version, so older ones may lack some of them. Low-poly art and synthesised sound throughout. Runs best in Chrome or Edge on a laptop or desktop.</p>
+  </div>
+</main>
+
+<script>
+(function () {
+  // Builds come from versions.json (written by web/publish_build.py). Each build
+  // has its own game pack; builds on the same Godot version share one engine.
+  const STORE_KEY = 'ls-build';
+  const startBtn = document.getElementById('startBtn');
+  const statusEl = document.getElementById('status');
+  const bar = document.getElementById('bar');
+  const errorEl = document.getElementById('error');
+  const cover = document.getElementById('cover');
+  const canvas = document.getElementById('canvas');
+  const hudBtns = document.getElementById('hudBtns');
+  const select = document.getElementById('buildSelect');
+  const card = document.getElementById('buildCard');
+  const countEl = document.getElementById('buildCount');
+  const logEl = document.getElementById('log');
+
+  let manifest = null;
+  let loadedEngine = null;   // Godot version whose index.js is on the page
+  let started = false;
+
+  // The horde on the field map: a scatter of shamblers at different paces.
+  (function () {
+    const dead = document.getElementById('dead');
+    for (let i = 0; i < 26; i++) {
+      const d = document.createElement('i');
+      const dur = 9 + Math.random() * 10;
+      d.style.top = (14 + Math.random() * 70) + '%';
+      d.style.animationDuration = dur + 's';
+      d.style.animationDelay = (-Math.random() * dur) + 's';
+      dead.appendChild(d);
+    }
+  })();
+
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.hidden = false;
+    startBtn.disabled = false;
+    startBtn.textContent = 'Try again';
+  }
+  function mb(n) { return (n / 1048576).toFixed(1) + ' MB'; }
+  function setProgress(f, text) {
+    bar.style.width = (f * 100).toFixed(1) + '%';
+    if (text) statusEl.textContent = text;
+  }
+  function remember(key) { try { localStorage.setItem(STORE_KEY, key); } catch (e) {} }
+  function recalled() { try { return localStorage.getItem(STORE_KEY); } catch (e) { return null; } }
+  function current() { return manifest && manifest.builds.find(function (b) { return b.key === select.value; }); }
+  function niceDate(iso) {
+    const d = new Date(iso + 'T12:00:00Z');
+    return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+  }
+  function el(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function prLink(b) {
+    const a = el('a', null, 'PR #' + b.pr);
+    a.href = b.pr_url; a.target = '_blank'; a.rel = 'noopener';
+    return a;
+  }
+
+  // --- Version picker and changelog -------------------------------------------
+
+  function renderCard(b) {
+    card.textContent = '';
+    const meta = el('div', 'meta');
+    meta.appendChild(el('span', 'key', b.key));
+    meta.appendChild(el('span', 'pill ' + b.status, b.status === 'open' ? 'PR open' : 'Merged'));
+    meta.appendChild(el('span', null, niceDate(b.date)));
+    if (b.pr_url) meta.appendChild(prLink(b));
+    meta.appendChild(el('span', null, b.commit));
+    meta.appendChild(el('span', null, 'Godot ' + b.engine.replace('.stable', '')));
+    card.appendChild(meta);
+    card.appendChild(el('p', 'summary', b.summary));
+    document.querySelectorAll('.entry').forEach(function (e) {
+      e.classList.toggle('current', e.dataset.key === b.key);
+    });
+  }
+
+  function choose(key) {
+    select.value = key;
+    const b = current();
+    renderCard(b);
+    remember(b.key);
+    try { history.replaceState(null, '', '#' + b.key); } catch (e) {}
+    if (loadedEngine && b.engine !== loadedEngine) {
+      statusEl.textContent = 'This version uses Godot ' + b.engine + '. Starting it reloads the page.';
+    }
+  }
+
+  function renderLog() {
+    logEl.textContent = '';
+    manifest.builds.forEach(function (b) {
+      const row = el('article', 'entry');
+      row.dataset.key = b.key;
+      const ver = el('div', 'ver', b.key);
+      ver.appendChild(el('small', null, niceDate(b.date) + (b.status === 'open' ? ' · PR open' : '')));
+      row.appendChild(ver);
+      const body = el('div');
+      body.appendChild(el('h3', null, b.title));
+      body.appendChild(el('p', 'summary', b.summary));
+      if (b.changes && b.changes.length) {
+        const ul = el('ul');
+        b.changes.forEach(function (c) { ul.appendChild(el('li', null, c)); });
+        body.appendChild(ul);
+      }
+      const meta = el('div', 'meta');
+      if (b.pr_url) meta.appendChild(prLink(b));
+      meta.appendChild(el('span', null, b.commit));
+      body.appendChild(meta);
+      const play = el('button', 'play', 'Play ' + b.key);
+      play.type = 'button';
+      play.addEventListener('click', function () {
+        choose(b.key);
+        select.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        select.focus({ preventScroll: true });
+      });
+      body.appendChild(play);
+      row.appendChild(body);
+      logEl.appendChild(row);
+    });
+  }
+
+  function populate() {
+    select.textContent = '';
+    manifest.builds.forEach(function (b) {
+      const o = document.createElement('option');
+      o.value = b.key;
+      o.textContent = b.key + ' · ' + b.title + (b.status === 'open' ? '  (PR open)' : '') + ' · ' + niceDate(b.date);
+      select.appendChild(o);
+    });
+    const merged = manifest.builds.filter(function (b) { return b.status === 'merged'; }).length;
+    countEl.textContent = merged + (merged === 1 ? ' version' : ' versions') +
+      (merged === manifest.builds.length ? '' : ', ' + (manifest.builds.length - merged) + ' preview');
+    renderLog();
+    // A bare #KEY in the link picks a version; otherwise the last one played, else the newest.
+    const wanted = [location.hash.slice(1), recalled()];
+    const pick = wanted.find(function (k) { return k && manifest.builds.some(function (b) { return b.key === k; }); });
+    select.disabled = false;
+    choose(pick || manifest.builds[0].key);
+  }
+
+  select.addEventListener('change', function () { choose(select.value); });
+
+  // --- Engine -------------------------------------------------------------------
+
+  function loadEngineScript(version) {
+    return new Promise(function (resolve, reject) {
+      const s = document.createElement('script');
+      s.src = 'engine/' + version + '/index.js';
+      s.onload = function () { loadedEngine = version; resolve(); };
+      s.onerror = function () { reject(new Error('Could not load the Godot ' + version + ' loader.')); };
+      document.head.appendChild(s);
+    });
+  }
+
+  function checkFeatures() {
+    const missing = Engine.getMissingFeatures({ threads: false });
+    if (typeof DecompressionStream === 'undefined') missing.push('DecompressionStream (update your browser)');
+    if (missing.length) {
+      showError('This browser is missing features the game needs: ' + missing.join(', ') + '. Try a current version of Chrome, Edge, Firefox or Safari on a computer.');
+      startBtn.disabled = true;
+      return false;
+    }
+    return true;
+  }
+
+  // The engine ships gzipped to keep the Pages repo small. Godot asks for
+  // <exe>.wasm and index.pck; hand it the shared engine and this version's pack.
+  let gzLoaded = 0;
+  const realFetch = window.fetch.bind(window);
+  window.fetch = function (input, init) {
+    const url = typeof input === 'string' ? input : (input && input.url) || '';
+    const b = current();
+    if (b && /(^|\/)index\.wasm(\?|$)/.test(url)) {
+      return realFetch('engine/' + b.engine + '/engine-gz.wasm', init).then(async function (res) {
+        if (!res.ok) throw new Error('Could not download the game engine (HTTP ' + res.status + ').');
+        const total = Number(res.headers.get('Content-Length')) || 10 * 1048576;
+        const reader = res.body.getReader();
+        const chunks = [];
+        for (;;) {
+          const r = await reader.read();
+          if (r.done) break;
+          chunks.push(r.value);
+          gzLoaded += r.value.length;
+          setProgress(Math.min(0.9, gzLoaded / total * 0.9), 'Downloading engine ' + mb(gzLoaded) + ' / ' + mb(total));
+        }
+        const blob = new Blob(chunks);
+        const head = new Uint8Array(await blob.slice(0, 2).arrayBuffer());
+        const isGzip = head[0] === 0x1f && head[1] === 0x8b;
+        setProgress(0.92, 'Unpacking engine');
+        const body = isGzip ? blob.stream().pipeThrough(new DecompressionStream('gzip')) : blob.stream();
+        return new Response(body, { status: 200, headers: { 'Content-Type': 'application/wasm' } });
+      });
+    }
+    if (b && /(^|\/)index\.pck(\?|$)/.test(url)) {
+      return realFetch('builds/' + b.key + '/game.pck', init);
+    }
+    return realFetch(input, init);
+  };
+
+  function start() {
+    const b = current();
+    if (!b) return;
+    remember(b.key);
+    // One engine per page load: a different Godot version needs a fresh page.
+    if (loadedEngine !== b.engine) { location.reload(); return; }
+    errorEl.hidden = true;
+    startBtn.disabled = true;
+    select.disabled = true;
+    startBtn.textContent = 'Mustering';
+    setProgress(0.02, 'Connecting');
+    canvas.hidden = false;
+    const exe = 'engine/' + b.engine + '/index';
+    const sizes = { 'index.pck': b.pck_size };
+    sizes[exe + '.wasm'] = manifest.engines[b.engine].wasm_size;
+    const engine = new Engine({
+      args: [],
+      canvas: canvas,
+      canvasResizePolicy: 2,
+      executable: exe,
+      mainPack: 'index.pck',
+      fileSizes: sizes,
+      focusCanvas: true,
+      ensureCrossOriginIsolationHeaders: false,
+      experimentalVK: false,
+      gdextensionLibs: [],
+      emscriptenPoolSize: 8,
+      godotPoolSize: 4,
+      onProgress: function (cur, total) {
+        if (total > 0 && cur >= total) setProgress(0.97, 'Starting ' + b.key);
+      },
+      onExit: function () {
+        cover.classList.remove('fading');
+        cover.hidden = false;
+        canvas.hidden = true;
+        hudBtns.hidden = true;
+        statusEl.textContent = 'The game closed. Reload the page to play again.';
+        startBtn.hidden = true;
+      },
+    });
+    started = true;
+    engine.startGame().then(function () {
+      setProgress(1, 'Running ' + b.key);
+      cover.classList.add('fading');
+      setTimeout(function () { cover.hidden = true; }, 520);
+      document.getElementById('switchBtn').textContent = 'Change version (' + b.key + ')';
+      hudBtns.hidden = false;
+      canvas.focus();
+    }).catch(function (err) {
+      canvas.hidden = true;
+      select.disabled = false;
+      showError('The game failed to start: ' + (err && err.message ? err.message : err));
+    });
+  }
+
+  startBtn.addEventListener('click', function () {
+    if (started) { location.reload(); return; }  // after a failed start
+    start();
+  });
+
+  // A running engine can't be swapped, so changing version goes back to a fresh cover page.
+  document.getElementById('switchBtn').addEventListener('click', function () { location.reload(); });
+
+  document.getElementById('fsBtn').addEventListener('click', function () {
+    const root = document.documentElement;
+    const p = document.fullscreenElement ? document.exitFullscreen() : (root.requestFullscreen ? root.requestFullscreen() : null);
+    if (p && p.catch) p.catch(function () {});
+    canvas.focus();
+  });
+  document.addEventListener('fullscreenchange', function () {
+    document.getElementById('fsBtn').textContent = document.fullscreenElement ? 'Exit fullscreen' : 'Fullscreen';
+  });
+  canvas.addEventListener('pointerdown', function () { canvas.focus(); });
+
+  // --- Boot -----------------------------------------------------------------------
+
+  startBtn.disabled = true;
+  realFetch('versions.json', { cache: 'no-cache' }).then(function (res) {
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  }).then(function (m) {
+    if (!m.builds || !m.builds.length) throw new Error('no versions listed');
+    manifest = m;
+    populate();
+    return loadEngineScript(current().engine);
+  }).then(function () {
+    if (checkFeatures()) startBtn.disabled = false;
+  }).catch(function (err) {
+    countEl.textContent = '';
+    showError('The muster roll could not be loaded (' + err.message + '). Reload the page to try again.');
+    startBtn.disabled = true;
+  });
+})();
+</script>
+</body>
+</html>
