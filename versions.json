@@ -6,6 +6,79 @@
   },
   "builds": [
     {
+      "key": "v3",
+      "title": "Web browser multiplayer",
+      "pr": 7,
+      "pr_url": "https://github.com/choinker/the-last-stand/pull/7",
+      "date": "2026-10-30",
+      "commit": "4331880",
+      "status": "open",
+      "engine": "4.7.2.stable",
+      "pck_size": 169976,
+      "summary": "Up to five players can now hold the line together from their browsers, with a lobby browser for starting or joining a company, and anyone who falls can be revived by a comrade.",
+      "changes": [
+        "Multiplayer: up to 5 players hold the line together, in the browser or on the desktop.",
+        "A lobby browser on the new main menu: join an open lobby or start your own, even in the middle of a night.",
+        "The host is the sergeant, giving the orders and spending the supplies at dawn. Each extra player brings more of the dead.",
+        "Revive the fallen: hold E on a fallen man within a minute to get him back on his feet, in single player too.",
+        "A downed player can wait for a comrade to revive them, or press Space to take over the nearest man."
+      ],
+      "design": [
+        {
+          "q": "Who can call the line's orders?",
+          "a": "Lobby host only."
+        },
+        {
+          "q": "How do players fit into the 20-man company?",
+          "a": "Added on top, with harder waves."
+        },
+        {
+          "q": "Who spends supplies at dawn?",
+          "a": "The host decides."
+        },
+        {
+          "q": "Can players join once a night has started?",
+          "a": "Drop in anytime."
+        },
+        {
+          "q": "What happens when a player falls?",
+          "a": "Add a revive feature: for up to a minute after a militiaman falls, a player can revive him by holding E on him for 10 seconds. If he isn't revived, the player jumps into the nearest living AI man, so deaths still drain the company."
+        },
+        {
+          "q": "Who can be revived?",
+          "a": "Players and AI men."
+        },
+        {
+          "q": "What does a downed player do while waiting?",
+          "a": "Wait, or give up early. It happens automatically at 60 s."
+        },
+        {
+          "q": "What happens when the host disconnects?",
+          "a": "Host passes on to the longest-connected player."
+        },
+        {
+          "q": "How should lobbies map to servers?",
+          "a": "One server per lobby on Edgegap."
+        },
+        {
+          "q": "Single player?",
+          "a": "Keep offline single player."
+        },
+        {
+          "q": "Where should the lobby API run?",
+          "a": "First a separate Supabase project, kept apart from JobZerg. Supabase pushed for an upgrade, so it moved to a Cloudflare Worker."
+        },
+        {
+          "q": "How is the server image built?",
+          "a": "GitHub Actions, with no Docker on the Mac."
+        },
+        {
+          "q": "Edgegap's 60-minute free-tier cap?",
+          "a": "Free tier for now, with warnings before the cap."
+        }
+      ]
+    },
+    {
       "key": "v2",
       "title": "Five nights at the Hollow",
       "pr": 3,
