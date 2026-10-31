@@ -6,6 +6,71 @@
   },
   "builds": [
     {
+      "key": "v2",
+      "title": "Five nights at the Hollow",
+      "pr": 3,
+      "pr_url": "https://github.com/choinker/the-last-stand/pull/3",
+      "date": "2026-10-30",
+      "commit": "8a982be",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 116540,
+      "summary": "Fort Hollow becomes a five-night campaign: gates in every line, bayonet charges, and a company of musketmen, riflemen, grenadiers and a drummer who level up between nights, and can break and run.",
+      "changes": [
+        "A five-night campaign. At each dawn, spend supplies on stronger works, iron-bound gates, paper cartridges, rum, recruits, riflemen, grenadiers or a second drummer",
+        "Two gates in every line: the men march through them, you can't cross the walls, and the dead go first for any gate near them, since it's weaker than the wall",
+        "New orders: G advances the whole line and B fixes bayonets (deadly up close, slower reloads); fix them and advance to charge. F is your own bayonet thrust",
+        "Four roles, levels that carry between nights, and morale that breaks. The drummer walks the line to steady every man on it, and routed men run for the village and rally once calm. Hold Tab to see the company",
+        "Brutes reel back when hit, and a realism pass gives jointed figures in period dress, textured timber, grass, stars, ground mist and filmic lighting. The HUD now scales with the window"
+      ],
+      "design": [
+        {
+          "q": "Should falling back be all-or-nothing, or partial?",
+          "a": "Full fall backs, plus a fix-bayonets command and a move-forward command. These became two separate orders (B and G) that combine into a bayonet charge."
+        },
+        {
+          "q": "Are you a sergeant giving orders, or an ordinary soldier?",
+          "a": "An ordinary soldier."
+        },
+        {
+          "q": "As an ordinary soldier, who gives the line's orders?",
+          "a": "You still call them, with no rank: same stats as any man, and you take over another man's musket when you fall."
+        },
+        {
+          "q": "How should barricades and gates work?",
+          "a": "Two gates for defenders on each line. The dead prioritise crushing a gate when it's near them, and gates have less health than wall sections."
+        },
+        {
+          "q": "One night, or a longer campaign?",
+          "a": "Several nights, with upgrades in between: five nights and eight upgrades."
+        },
+        {
+          "q": "Should militiamen level up, have roles, or have morale that can break?",
+          "a": "All three."
+        },
+        {
+          "q": "Keep the low-poly look, or go more realistic?",
+          "a": "A more realistic feel."
+        },
+        {
+          "q": "Realism through CC0 animated models, or better procedural art?",
+          "a": "CC0 animated models were chosen, but the model download was then declined, so this version does a deeper procedural pass instead."
+        },
+        {
+          "q": "How should the drummer's boost reach the men?",
+          "a": "He walks the back of the line from end to end, so the whole line gets his boost."
+        },
+        {
+          "q": "Should hits affect brutes physically?",
+          "a": "Yes: big zombies are knocked back when hit."
+        },
+        {
+          "q": "What should the zombies sound like?",
+          "a": "More guttural and less computer-like, with each zombie's pitch varied. The synthesised voices sounded like jets, so zombie sounds are removed for now; a README concept covers bringing them back."
+        }
+      ]
+    },
+    {
       "key": "v1",
       "title": "First muster",
       "pr": null,

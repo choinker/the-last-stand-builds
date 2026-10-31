@@ -260,6 +260,20 @@ kbd {
 .entry .play:hover { color: var(--parch); }
 .entry .play:focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
 .entry.current .ver { color: var(--ember); }
+.design { margin-top: 10px; border-left: 2px solid var(--rule); padding-left: 12px; }
+.design summary {
+  cursor: pointer; list-style: none;
+  font: 700 12px/1.6 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faded);
+}
+.design summary::-webkit-details-marker { display: none; }
+.design summary::before { content: "▸ "; color: var(--ember); }
+.design[open] summary::before { content: "▾ "; }
+.design summary:hover { color: var(--parch); }
+.design summary:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+.design dl { margin: 8px 0 0; display: grid; gap: 8px; font-size: 15px; }
+.design dt { font-style: italic; color: var(--faded); }
+.design dd { margin: 2px 0 0; }
+.design dd::before { content: "— "; color: var(--ember); }
 
 .fine { font-size: 14px; color: var(--faded); margin: 0; text-align: center; font-style: italic; }
 
@@ -310,7 +324,7 @@ kbd {
       <p class="hear">Hear ye, hear ye</p>
       <h1><small>The</small>Last Stand<br>at Fort Hollow</h1>
       <svg class="rule-orn" viewBox="0 0 420 12" aria-hidden="true"><path d="M0 6h180M240 6h180" stroke="currentColor" stroke-width="1"/><path d="M210 0l6 6-6 6-6-6z" fill="currentColor"/><circle cx="192" cy="6" r="2" fill="currentColor"/><circle cx="228" cy="6" r="2" fill="currentColor"/></svg>
-      <p class="lede">At sunset the dead walk out of the eastern woods. Twenty men of the Hollow militia must hold them off until dawn: firing in volleys, mending the barricades, and falling back toward the village when a line can no longer hold.</p>
+      <p class="lede">At sunset the dead walk out of the eastern woods. You are one musket among twenty men of the Hollow militia, and you must hold them off for five nights: firing in volleys, mending the barricades and their gates, and falling back toward the village when a line can no longer hold.</p>
     </header>
 
     <section class="field" aria-labelledby="mapHeading">
@@ -337,14 +351,14 @@ kbd {
     </section>
 
     <section class="clock" aria-labelledby="clockHeading">
-      <h2 id="clockHeading">One night, seven waves</h2>
+      <h2 id="clockHeading">Five nights, seven waves each</h2>
       <div class="sky" role="img" aria-label="The night from 6:45 in the evening to 5:45 in the morning, with seven waves of the dead.">
         <i style="left:5%" data-w="I"></i><i style="left:15.8%" data-w="II"></i><i style="left:27.5%" data-w="III"></i>
         <i style="left:40%" data-w="IV"></i><i class="big" style="left:53.3%" data-w="V"></i>
         <i class="big" style="left:66.7%" data-w="VI"></i><i class="big" style="left:80%" data-w="VII"></i>
       </div>
       <div class="hours" aria-hidden="true"><span>18:45 sunset</span><span>midnight</span><span>05:45 dawn</span></div>
-      <p class="caption">Walkers come first, then runners, then great hulking brutes that tear through a fence in seconds. Last until the sun rises behind the eastern woods and the dead burn in its light.</p>
+      <p class="caption">Walkers come first, then runners, then great hulking brutes that tear through a fence in seconds. Last until the sun rises behind the eastern woods and the dead burn in its light. Then do it again, four more times, with more of them every night.</p>
     </section>
 
     <section class="build" aria-labelledby="buildHeading">
@@ -372,23 +386,23 @@ kbd {
         <h2>Drill</h2>
         <table class="controls">
           <tr><td>March</td><td><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>, <kbd>Shift</kbd> to run, <kbd>Space</kbd> to jump</td></tr>
-          <tr><td>Fire / aim</td><td><kbd>LMB</kbd> / <kbd>RMB</kbd></td></tr>
+          <tr><td>Fire / aim</td><td><kbd>LMB</kbd> / <kbd>RMB</kbd>, <kbd>F</kbd> bayonet thrust</td></tr>
           <tr><td>Reload</td><td><kbd>R</kbd>, about four seconds</td></tr>
-          <tr><td>Repair</td><td>Hold <kbd>E</kbd> at a damaged barricade</td></tr>
-          <tr><td>Order a volley</td><td><kbd>V</kbd></td></tr>
-          <tr><td>Hold fire</td><td><kbd>H</kbd> toggles auto-volleys</td></tr>
-          <tr><td>Fall back</td><td><kbd>T</kbd> sends the line west</td></tr>
-          <tr><td>Pause</td><td><kbd>Esc</kbd></td></tr>
+          <tr><td>Repair</td><td>Hold <kbd>E</kbd> at a damaged wall or gate</td></tr>
+          <tr><td>Fall back / advance</td><td><kbd>T</kbd> / <kbd>G</kbd>, the whole line, through the gates</td></tr>
+          <tr><td>Bayonets</td><td><kbd>B</kbd> fixes or unfixes them</td></tr>
+          <tr><td>Volley / hold fire</td><td><kbd>V</kbd> / <kbd>H</kbd></td></tr>
+          <tr><td>The company</td><td>Hold <kbd>Tab</kbd>; <kbd>Esc</kbd> pauses</td></tr>
         </table>
       </section>
       <section>
         <h2>Standing orders</h2>
         <ul class="orders">
-          <li>Fire when the sergeant calls <em>Present!</em> or <em>Fire!</em> and your shot hits half again as hard.</li>
-          <li>Aim for the head. A ball to the skull drops a walker outright.</li>
-          <li>A broken section can be rebuilt. Hold <kbd>E</kbd> until it stands again.</li>
-          <li>If you fall, you take up the musket of the nearest man still standing.</li>
-          <li>Lose if ten of the dead reach the houses, or when the last man falls.</li>
+          <li>Five nights, each worse than the last. Spend the supplies you earn at dawn on the works and the men.</li>
+          <li>Each line has two gates. The men pass through them; the dead go for them first, and they're weaker than the walls.</li>
+          <li>Musketmen volley, riflemen pick off brutes, grenadiers throw bombs into crowds, and the drummer walks the back of the line, steadying every man on it.</li>
+          <li>Men level up as they kill. Their morale breaks when friends fall around them, so stand near them and keep the drum beating.</li>
+          <li>Fixed bayonets hit hard up close but slow reloading. Fix them and advance to clear a line.</li>
         </ul>
       </section>
     </div>
@@ -511,6 +525,19 @@ kbd {
         const ul = el('ul');
         b.changes.forEach(function (c) { ul.appendChild(el('li', null, c)); });
         body.appendChild(ul);
+      }
+      if (b.design && b.design.length) {
+        const det = el('details', 'design');
+        det.appendChild(el('summary', null, 'Design decisions (' + b.design.length + ')'));
+        const dl = el('dl');
+        b.design.forEach(function (d) {
+          const row = el('div');
+          row.appendChild(el('dt', null, d.q));
+          row.appendChild(el('dd', null, d.a));
+          dl.appendChild(row);
+        });
+        det.appendChild(dl);
+        body.appendChild(det);
       }
       const meta = el('div', 'meta');
       if (b.pr_url) meta.appendChild(prLink(b));
