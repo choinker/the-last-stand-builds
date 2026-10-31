@@ -7,19 +7,20 @@
   "builds": [
     {
       "key": "v5",
-      "title": "Multiplayer diagnostics",
+      "title": "Hold-E freeze fix and multiplayer diagnostics",
       "pr": 11,
       "pr_url": "https://github.com/choinker/the-last-stand/pull/11",
       "date": "2026-10-31",
-      "commit": "a14993c",
+      "commit": "b8518c8",
       "status": "open",
       "engine": "4.7.2.stable",
-      "pck_size": 239788,
-      "summary": "Press F3 in multiplayer to see whether updates from the fort are arriving and being applied, to help track down the freeze some players see while repairing or reviving.",
+      "pck_size": 240204,
+      "summary": "Fixes the freeze some players saw while holding E to repair or revive on slower computers, and adds an F3 network diagnostics overlay for multiplayer.",
       "changes": [
+        "Fixed the freeze while holding E to repair or revive on slower computers: the game no longer loses updates and jumps forward when you let go.",
+        "Holding a key no longer floods the browser with repeat key presses during play.",
         "Press F3 in multiplayer to show network diagnostics: updates received and applied per second, frame rate and stalls.",
-        "Add ?diag=1 to the game's address to open the diagnostics as soon as the game starts.",
-        "Any moment the game stops receiving updates from the fort is logged to the browser console, with what you were doing at the time."
+        "Add ?diag=1 to the game's address to open the diagnostics as soon as the game starts."
       ],
       "design": [
         {
@@ -28,7 +29,7 @@
         },
         {
           "q": "What happens during the freeze?",
-          "a": "The camera still turns. It unfreezes and everything jumps forward when E is released. It happened in Chrome on the published game."
+          "a": "The camera still turns. It unfreezes and everything jumps forward when E is released. It happened in Chrome on a slower Windows machine; a faster Mac didn't freeze."
         },
         {
           "q": "Should test players be sent into a real lobby to reproduce it?",
@@ -41,6 +42,10 @@
         {
           "q": "Is this a new version or a maintenance change?",
           "a": "A new version, since it changes the game build."
+        },
+        {
+          "q": "Add the buffer fix and the key-repeat filter to v5?",
+          "a": "Yes, add both to v5."
         }
       ]
     },
