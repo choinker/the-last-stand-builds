@@ -11,17 +11,18 @@
       "pr": 7,
       "pr_url": "https://github.com/choinker/the-last-stand/pull/7",
       "date": "2026-10-30",
-      "commit": "4331880",
+      "commit": "723293b",
       "status": "open",
       "engine": "4.7.2.stable",
-      "pck_size": 169976,
+      "pck_size": 176436,
       "summary": "Up to five players can now hold the line together from their browsers, with a lobby browser for starting or joining a company, and anyone who falls can be revived by a comrade.",
       "changes": [
         "Multiplayer: up to 5 players hold the line together, in the browser or on the desktop.",
         "A lobby browser on the new main menu: join an open lobby or start your own, even in the middle of a night.",
         "The host is the sergeant, giving the orders and spending the supplies at dawn. Each extra player brings more of the dead.",
         "Revive the fallen: hold E on a fallen man within a minute to get him back on his feet, in single player too.",
-        "A downed player can wait for a comrade to revive them, or press Space to take over the nearest man."
+        "A downed player can wait for a comrade to revive them, or press Space to take over the nearest man.",
+        "Smooth over laggy connections: the dead and your comrades move steadily, sprinting no longer snaps you back, and zombies strike where you really are."
       ],
       "design": [
         {
@@ -59,6 +60,10 @@
         {
           "q": "Single player?",
           "a": "Keep offline single player."
+        },
+        {
+          "q": "Players who join stutter and zombies lurch: what should change?",
+          "a": "Draw the world a moment in the past between snapshots, give the server's speed check a catch-up allowance with eased corrections, and have zombies strike where a remote player really is."
         }
       ]
     },
