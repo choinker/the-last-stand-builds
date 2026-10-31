@@ -57,24 +57,8 @@
           "a": "Host passes on to the longest-connected player."
         },
         {
-          "q": "How should lobbies map to servers?",
-          "a": "One server per lobby on Edgegap."
-        },
-        {
           "q": "Single player?",
           "a": "Keep offline single player."
-        },
-        {
-          "q": "Where should the lobby API run?",
-          "a": "First a separate Supabase project, kept apart from JobZerg. Supabase pushed for an upgrade, so it moved to a Cloudflare Worker."
-        },
-        {
-          "q": "How is the server image built?",
-          "a": "GitHub Actions, with no Docker on the Mac."
-        },
-        {
-          "q": "Edgegap's 60-minute free-tier cap?",
-          "a": "Free tier for now, with warnings before the cap."
         }
       ]
     },
