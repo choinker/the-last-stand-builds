@@ -6,6 +6,45 @@
   },
   "builds": [
     {
+      "key": "v5",
+      "title": "Multiplayer diagnostics",
+      "pr": 11,
+      "pr_url": "https://github.com/choinker/the-last-stand/pull/11",
+      "date": "2026-10-31",
+      "commit": "a14993c",
+      "status": "open",
+      "engine": "4.7.2.stable",
+      "pck_size": 239788,
+      "summary": "Press F3 in multiplayer to see whether updates from the fort are arriving and being applied, to help track down the freeze some players see while repairing or reviving.",
+      "changes": [
+        "Press F3 in multiplayer to show network diagnostics: updates received and applied per second, frame rate and stalls.",
+        "Add ?diag=1 to the game's address to open the diagnostics as soon as the game starts.",
+        "Any moment the game stops receiving updates from the fort is logged to the browser console, with what you were doing at the time."
+      ],
+      "design": [
+        {
+          "q": "Should we dig into the code to find the cause of the freeze?",
+          "a": "Yes, investigate."
+        },
+        {
+          "q": "What happens during the freeze?",
+          "a": "The camera still turns. It unfreezes and everything jumps forward when E is released. It happened in Chrome on the published game."
+        },
+        {
+          "q": "Should test players be sent into a real lobby to reproduce it?",
+          "a": "Yes: three browser players started a lobby and played it to look for latency problems."
+        },
+        {
+          "q": "Rerun with a pasted console logger, or add diagnostics to the game?",
+          "a": "Add in-game diagnostics."
+        },
+        {
+          "q": "Is this a new version or a maintenance change?",
+          "a": "A new version, since it changes the game build."
+        }
+      ]
+    },
+    {
       "key": "v4",
       "title": "Knockback, power-ups, emotes, instruments and watchtowers",
       "pr": 9,
