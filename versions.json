@@ -6,6 +6,40 @@
   },
   "builds": [
     {
+      "key": "v4",
+      "title": "Knockback, power-ups, emotes, instruments and watchtowers",
+      "pr": 9,
+      "pr_url": "https://github.com/choinker/the-last-stand/pull/9",
+      "date": "2026-10-31",
+      "commit": "51389dc",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 237052,
+      "summary": "Hits from the dead now shove you back, brutes drop power-ups, and a weapon bar adds a saber and instruments that speed up reloading around you. Watchtowers stand between the lines to climb and fire from, and you can emote while you wait for the next wave.",
+      "changes": [
+        "Zombie hits now shove you back (harder from a brute), and the health bar shows each hit draining away.",
+        "Brutes sometimes drop a carpenter's kit, fresh powder or a rum flask. Walk over it to help the whole line.",
+        "A weapon bar (1\u20136): a saber, and a drum, bagpipe and flute that make the men around you reload faster while you play.",
+        "A watchtower stands between each pair of lines: climb it to fire over the walls, but the dead will try to bring it down.",
+        "Hold Z for emotes: smoke a cigarette, dance a jig, cheer, salute and more.",
+        "A ring around the crosshair shows your reload closing in."
+      ],
+      "design": [
+        {
+          "q": "Should all six features work in multiplayer too, or single player first?",
+          "a": "Full multiplayer: they run on the server and show for every player."
+        },
+        {
+          "q": "What goes in weapon bar slot 6?",
+          "a": "Leave it empty and greyed out for now."
+        },
+        {
+          "q": "Which brute power-ups should ship?",
+          "a": "The carpenter's kit, fresh powder and the rum flask."
+        }
+      ]
+    },
+    {
       "key": "v3",
       "title": "Web browser multiplayer",
       "pr": 7,
