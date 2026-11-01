@@ -6,6 +6,41 @@
   },
   "builds": [
     {
+      "key": "v7",
+      "title": "Pipes and bayonets",
+      "pr": 13,
+      "pr_url": "https://github.com/choinker/the-last-stand/pull/13",
+      "date": "2026-11-01",
+      "commit": "4a3af82",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 253852,
+      "summary": "The bagpipe now steadies the men within its reach and drives their fixed bayonets 35% harder. Holding an instrument shows all its boosts on screen.",
+      "changes": [
+        "The bagpipe now steadies the men: everyone within its 14 m reach regains morale while you play.",
+        "Men within the pipe's reach hit 35% harder with fixed bayonets.",
+        "Holding an instrument now shows all its boosts (reloading, morale and bayonets) at the bottom right."
+      ],
+      "design": [
+        {
+          "q": "What should the bagpipe do?",
+          "a": "It should regenerate company morale within its aura radius and boost bayonet damage by +35%."
+        },
+        {
+          "q": "How fast should the pipe restore morale?",
+          "a": "1.0 per second, a little below the drum's 1.5 because the pipe reaches much further. The best tune nearby counts; they don't stack."
+        },
+        {
+          "q": "When does the bayonet bonus apply?",
+          "a": "Only with bayonets fixed, for the militia's stabs and a player's bayonet thrust. Butt strikes and the saber aren't boosted."
+        },
+        {
+          "q": "Should the new boosts show in the UI?",
+          "a": "Yes, the same way the reload bonus shows: all of an instrument's boosts are listed under its name while you hold or play it."
+        }
+      ]
+    },
+    {
       "key": "v6",
       "title": "Character screen and company card",
       "pr": 12,
