@@ -11,8 +11,8 @@
       "pr": 11,
       "pr_url": "https://github.com/choinker/the-last-stand/pull/11",
       "date": "2026-10-31",
-      "commit": "b8518c8",
-      "status": "open",
+      "commit": "e3ff16f",
+      "status": "merged",
       "engine": "4.7.2.stable",
       "pck_size": 240204,
       "summary": "Fixes the freeze some players saw while holding E to repair or revive on slower computers, and adds an F3 network diagnostics overlay for multiplayer.",
@@ -20,6 +20,7 @@
         "Fixed the freeze while holding E to repair or revive on slower computers: the game no longer loses updates and jumps forward when you let go.",
         "Holding a key no longer floods the browser with repeat key presses during play.",
         "Press F3 in multiplayer to show network diagnostics: updates received and applied per second, frame rate and stalls.",
+        "Multiplayer is kept for the newest version and the one before it; older builds on this site are single player only.",
         "Add ?diag=1 to the game's address to open the diagnostics as soon as the game starts."
       ],
       "design": [
@@ -46,6 +47,14 @@
         {
           "q": "Add the buffer fix and the key-repeat filter to v5?",
           "a": "Yes, add both to v5."
+        },
+        {
+          "q": "How many versions keep multiplayer?",
+          "a": "The newest and the one before it; older builds keep single player."
+        },
+        {
+          "q": "Add a slow-machine safeguard, or ship as is?",
+          "a": "Ship as is: the Windows machine ran at 60 FPS with no stalls in Edge, so Chrome's graphics setup there was the cause."
         }
       ]
     },
