@@ -6,6 +6,43 @@
   },
   "builds": [
     {
+      "key": "v6",
+      "title": "Character screen and company card",
+      "pr": 12,
+      "pr_url": "https://github.com/choinker/the-last-stand/pull/12",
+      "date": "2026-10-31",
+      "commit": "3c9c711",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 253580,
+      "summary": "Before joining a multiplayer lobby you now name your man and choose how he looks, and everyone in the company sees him that way. While the company musters, a card shows how many players have joined, and who.",
+      "changes": [
+        "Choosing Multiplayer opens a character screen: name your man (a name is now required) and pick his skin tone, height, build and hair.",
+        "A turning 3D preview shows your man as you change him, and your choices are remembered.",
+        "Everyone in the company sees each player's man the way they made him.",
+        "While the company musters, a card shows how many players have joined, and who.",
+        "The info panel shows the player count during the night."
+      ],
+      "design": [
+        {
+          "q": "When does the character screen appear?",
+          "a": "Every time you choose Multiplayer, before the lobby list, filled in with your saved choices."
+        },
+        {
+          "q": "What can you change?",
+          "a": "Skin tone, height, build (fatness) and hair style. Name is a forced input: you can't reach the lobbies without one."
+        },
+        {
+          "q": "Where does the host see how many people are in the lobby?",
+          "a": "On the pre-night screen, where a lobby opens once its server is up: a card beside the orders with the count, the names and the open places. Every player sees it, and the count is also in the info panel during the night."
+        },
+        {
+          "q": "Coat and hair colour?",
+          "a": "Not separate choices. A saved seed keeps them the same between the preview and the game, and Randomise re-rolls them."
+        }
+      ]
+    },
+    {
       "key": "v5",
       "title": "Hold-E freeze fix and multiplayer diagnostics",
       "pr": 11,
