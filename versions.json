@@ -6,6 +6,60 @@
   },
   "builds": [
     {
+      "key": "v8",
+      "title": "Levels, the gunsmith and split squads",
+      "pr": 16,
+      "pr_url": "https://github.com/choinker/the-last-stand/pull/16",
+      "date": "2026-11-02",
+      "commit": "f511892",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 313964,
+      "summary": "Your own character now levels up and spends talent points, and earns shillings in the night to spend at the village gunsmith on new guns and upgrades. In multiplayer each player commands their own squad, village women heal the wounded, killing head shots burst heads, and each line's gates move every night.",
+      "changes": [
+        "Earn experience and level up your own character, then spend talent points in three trees (Marksman, Brawler, Officer) with K.",
+        "Earn shillings in the night and run back to the village gunsmith for a revolver, shotgun, lever-action rifle or scoped sniper rifle, plus weapon upgrades and supplies.",
+        "In multiplayer the company is split into squads, one per player, each holding its own stretch of line under its own orders. The Tab roster now ranks the players by kills.",
+        "Five village women (Camille, Regan, Kara, Jessie and Yuriko) tend the wounds of anyone who comes near them, and the Village Palisade is twice as strong.",
+        "A killing head shot bursts the head in a spray of blood.",
+        "Each line's gates fall in different places every night, so the dead take a different road."
+      ],
+      "design": [
+        {
+          "q": "How do squads hold the line in multiplayer?",
+          "a": "Each squad holds its own line and moves independently."
+        },
+        {
+          "q": "How should talents be organised?",
+          "a": "Three trees (Marksman, Brawler, Officer) with five tiers each, opened with K."
+        },
+        {
+          "q": "What carries over between nights?",
+          "a": "Level, talents, money and guns all carry over for the campaign. In multiplayer they're kept per player name; a retry restores them and a new campaign resets them."
+        },
+        {
+          "q": "Where do bought guns go?",
+          "a": "A new slot 6, one gun at a time; buying another swaps it."
+        },
+        {
+          "q": "Where do players shop?",
+          "a": "A gunsmith stall in the village: press E there during the night, or use it at dawn."
+        },
+        {
+          "q": "How do players earn money?",
+          "a": "Kills plus small bonuses: walker 2, runner 3, brute 10, plus revives and repairs."
+        },
+        {
+          "q": "How are the men split between players?",
+          "a": "Single player is unchanged. Multiplayer deals the men out evenly by role, reshuffles when a player joins or leaves, and a man a player takes over leaves the squad."
+        },
+        {
+          "q": "What does the leaderboard show?",
+          "a": "Kills and level: name, level, kills tonight and kills this campaign, sorted by kills."
+        }
+      ]
+    },
+    {
       "key": "v7",
       "title": "Pipes and bayonets",
       "pr": 13,
