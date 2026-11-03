@@ -6,6 +6,71 @@
   },
   "builds": [
     {
+      "key": "v9",
+      "title": "Expeditions, limited ammunition and the forge",
+      "pr": 17,
+      "pr_url": "https://github.com/choinker/the-last-stand/pull/17",
+      "date": "2026-11-02",
+      "commit": "7d616e8",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 386928,
+      "summary": "By day the company can take the wagon out to forage on the great plains or in the streets of Boston, choosing its way through events on the road, then carrying caches back before sundown. Powder and shot now run out, the men must be fed, and the village forge melts scrap into cartridges.",
+      "changes": [
+        "Send the company out by day on expeditions: plan the trip, face events on the road, then carry caches back to the wagon before sundown.",
+        "Two new maps: the great plains, with mounted dead and an overrun settlement, and the streets of colonial Boston.",
+        "Powder and shot are limited: when the cartridges run out, your men fix bayonets and draw hatchets.",
+        "Feed the company each night, or hungry men start the night weaker; melt scrap at the village forge for more cartridges.",
+        "Earn shillings from every kill your men make: half pay for each of the dead they put down."
+      ],
+      "design": [
+        {
+          "q": "How should an expedition play: a trail screen of events, a playable 3D foray, or both?",
+          "a": "Hybrid: a trail screen to plan the trip, with events on the road, then a short playable 3D foray where you load caches onto the wagon."
+        },
+        {
+          "q": "Which maps for this version?",
+          "a": "Both the great plains and Boston."
+        },
+        {
+          "q": "How should ammunition be tracked?",
+          "a": "One pool for the whole company. Bought guns keep their own ammo, bought with shillings."
+        },
+        {
+          "q": "Who goes on an expedition in multiplayer?",
+          "a": "Everyone goes, and the host decides where and how many men."
+        },
+        {
+          "q": "What does food do?",
+          "a": "It feeds the men: the company eats a ration per man, and hungry men start the night with less morale and health."
+        },
+        {
+          "q": "How is ammunition made?",
+          "a": "At a forge in the village: the dawn ledger melts scrap, and a player can hold E at the forge during the night."
+        },
+        {
+          "q": "What do the men fight with once the powder runs out?",
+          "a": "Bayonets and hatchets: riflemen and drummers draw hatchets, and grenadiers keep a separate grenade stock."
+        },
+        {
+          "q": "How should the plains' dead be shown?",
+          "a": "As the risen dead of a native people on horseback, with their overrun settlement to search, drawn as procedural figures with no caricature."
+        },
+        {
+          "q": "How much should a kill by one of your men pay you?",
+          "a": "Half, rounded: 1 for a walker or runner, 5 for a brute."
+        },
+        {
+          "q": "Which men count as under your control?",
+          "a": "Your squad in multiplayer; the whole company in single player."
+        },
+        {
+          "q": "Should their kills earn you experience too?",
+          "a": "No, shillings only."
+        }
+      ]
+    },
+    {
       "key": "v8",
       "title": "Levels, the gunsmith and split squads",
       "pr": 16,
